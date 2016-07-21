@@ -1,4 +1,13 @@
+```
 sudo apt-get install npm
 sudo npm install -g browserify watchify 
 sudo npm install reactify
 sudo npm install react react-dom
+```
+
+---
+
+```
+$ browserify -t reactify components/chat.js -o bundle.js
+$ watchify -t reactify components/chat.js -o bundle.js -v
+```
