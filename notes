@@ -1,0 +1,4 @@
+sudo apt-get install npm
+sudo npm install -g browserify watchify 
+sudo npm install reactify
+sudo npm install react react-dom
