@@ -1,11 +1,13 @@
 var React = require('react')
 var ReactDOM = require('react-dom')
 var Messages = require('./messages')
+var Channels = require('./channels')
 
 var Chat = React.createClass({
     getInitialState: function() {
         return {
             name: "anonymous",
+            channels: ['general'],
             messages: [{
                 name: 'brianmcmichael',
                 time: new Date(),
@@ -58,18 +60,7 @@ var Chat = React.createClass({
                     </div>
                     <div className="main">
                         <div className="listings">
-                            <div className="listings_channels">
-                                <h2 className="listings_header">Channels</h2>
-                                <ul className="channel_list">
-                                    <li className="channel active">
-                                        <a className="channel_name">
-                                            <span className="unread">0</span>
-                                            <span><span className="prefix">#</span>general</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="listings_direct-messages"></div>
+                            <Channels channels={this.state.channels} />
                         </div>
                         <div className="message-history">
                             <Messages messages={this.state.messages} />
