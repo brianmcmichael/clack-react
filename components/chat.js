@@ -1,5 +1,6 @@
 var React = require('react')
 var ReactDOM = require('react-dom')
+var Messages = require('./messages')
 
 var Chat = React.createClass({
     getInitialState: function() {
@@ -43,19 +44,7 @@ var Chat = React.createClass({
     },
 
     render: function() {
-        var messageList = this.state.messages.map(function(message, i) {
-            var text = message.text;
-            return (
-                <div key={i} className="message">
-                <div className="message">
-                <a href={"https://twitter.com/" + message.name + "/"} target="_blank"><img src={"https://twitter.com/" + message.name + "/profile_image"} className="message_profile-pic" /></a>
-                <a href={"https://twitter.com/" + message.name + "/"} target="_blank" className="message_username">{message.name}</a>
-            <span className="message_timestamp">{message.time.toLocaleString()}</span>
-            <span className="message_content" dangerouslySetInnerHTML={{__html: text}}></span>
-            </div>
-            </div>
-            )
-        })
+
         return(
             <div>
                 <div className="header">
@@ -83,13 +72,7 @@ var Chat = React.createClass({
                             <div className="listings_direct-messages"></div>
                         </div>
                         <div className="message-history">
-                            <div id="message-list">
-                                <div className="time-divide">
-                                    <span className="date">
-                                    </span>
-                                </div>
-                                {messageList}
-                            </div>
+                            <Messages messages={this.state.messages} />
                         </div>
                     </div>
                     <div className="footer">
