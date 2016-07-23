@@ -18,6 +18,12 @@ Step 2 - Install Pip (Optional)
 
 Step 3 - Install Virtualenv
 
+`$ virtualenv venv`
+
+`$ . venv/bin/activate`
+
+---
+
 `$ pip install Flask`
 ---
 
