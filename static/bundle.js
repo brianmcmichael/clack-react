@@ -28,7 +28,7 @@ var Channels = React.createClass({displayName: "Channels",
         this.setState({modalIsOpen: false});
     },
     
-    joinNewChannel: function () {
+    joinNewChannel: function() {
         var new_channel = $('#new-channel-name').val();
         if (new_channel.trim() != "") {
             this.props.createChannel(new_channel);
@@ -36,15 +36,21 @@ var Channels = React.createClass({displayName: "Channels",
         }
     },
 
-    onEnter: function (e) {
+    onEnter: function(e) {
         if (e.nativeEvent.keyCode != 13) return;
         this.joinNewChannel();
     },
 
+    switchChannel: function(channelName) {
+        this.props.joinChannel(channelName);
+    },
+
     render: function () {
+        var that = this;
+        var currentChannel = this.props.currentChannel;
         var channelList = this.props.channels.map(function(channel, i) {
             return (
-                React.createElement("li", {key: i, className: "channel active"}, 
+                React.createElement("li", {key: i, className: channel === currentChannel ? "channel active" : "channel", onClick: that.switchChannel.bind(that, channel)}, 
                     React.createElement("a", {className: "channel_name"}, 
                         React.createElement("span", {className: "unread"}, "0"), 
                         React.createElement("span", null, React.createElement("span", {className: "prefix"}, "#"), channel)
@@ -115,7 +121,8 @@ var Chat = React.createClass({displayName: "Chat",
                             time: new Date(),
                             text: 'hello b'
                         }
-                    ]
+                    ],
+            currentChannel: DEFAULT_CHANNEL
         };
     },
     
@@ -151,7 +158,12 @@ var Chat = React.createClass({displayName: "Chat",
         if (!(channelName in this.state.channels)) {
             // Add new channel, if it doesn't exist yet
             this.setState({ channels: this.state.channels.concat(channelName) });
+            this.joinChannel(channelName);
         }
+    },
+
+    joinChannel: function (channelName) {
+        this.setState({ currentChannel: channelName });
     },
 
     enterName: function (event) {
@@ -196,7 +208,12 @@ var Chat = React.createClass({displayName: "Chat",
                     ), 
                     React.createElement("div", {className: "main"}, 
                         React.createElement("div", {className: "listings"}, 
-                            React.createElement(Channels, {channels: this.state.channels, createChannel: this.createChannel})
+                            React.createElement(Channels, {
+                                channels: this.state.channels, 
+                                createChannel: this.createChannel, 
+                                currentChannel: this.state.currentChannel, 
+                                joinChannel: this.joinChannel}
+                             )
                         ), 
                         React.createElement("div", {className: "message-history"}, 
                             React.createElement(Messages, {messages: this.state.messages})
