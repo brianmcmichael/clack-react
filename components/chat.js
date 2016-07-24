@@ -15,23 +15,34 @@ const customStyles = {
     }
 };
 
+const DEFAULT_CHANNEL = "general";
+
 var Chat = React.createClass({
     getInitialState: function() {
         return {
             name: null,
             channels: ['general'],
             messages: [{
-                name: 'brianmcmichael',
-                time: new Date(),
-                text: 'hello brian'
-            },
-                {
-                    name: 'lexiapress',
-                    time: new Date(),
-                    text: 'hello b'
-                }
-            ]
+                            name: 'brianmcmichael',
+                            time: new Date(),
+                            text: 'hello brian'
+                        },
+                        {
+                            name: 'lexiapress',
+                            time: new Date(),
+                            text: 'hello b'
+                        }
+                    ]
         };
+    },
+    
+    componentWillMount: function () {
+        //this.pusher = new Pusher(PUSHER_CHAT_APP_KEY);
+        //this.chatRooms = {};
+    },
+
+    componentDidMount: function() {
+        //this.createChannel(DEFAULT_CHANNEL);
     },
 
     componentDidUpdate: function() {
@@ -44,11 +55,19 @@ var Chat = React.createClass({
             var message = {
                 name: this.state.name,
                 text: text,
-                time: new Date()
+                channel: this.state.currentChannel
             }
 
-            this.setState({messages: this.state.messages.concat(message)})
-            $('#msg-input').val('');
+            $.post('/messages/', message).success(function () {
+                $('#msg-input').val('');
+            });
+        }
+    },
+
+    createChannel: function(channelName) {
+        if (!(channelName in this.state.channels)) {
+            // Add new channel, if it doesn't exist yet
+            this.setState({ channels: this.state.channels.concat(channelName) });
         }
     },
 
@@ -94,7 +113,7 @@ var Chat = React.createClass({
                     </div>
                     <div className="main">
                         <div className="listings">
-                            <Channels channels={this.state.channels} />
+                            <Channels channels={this.state.channels} createChannel={this.createChannel} />
                         </div>
                         <div className="message-history">
                             <Messages messages={this.state.messages} />
