@@ -49,7 +49,7 @@ var Chat = React.createClass({
                 channel: this.state.currentChannel
             }
 
-            $.post('/messages/', message).success(function() {
+            $.post('/messages/', message).done(function() {
                 $('#msg-input').val('');
             });
         }
@@ -66,6 +66,12 @@ var Chat = React.createClass({
                 messages: messages
             });
             this.joinChannel(channelName);
+            this.chatRooms[channelName] = this.pusher.subscribe(channelName);
+            this.chatRooms[channelName].bind('new_message', function(message) {
+                var messages = this.state.messages;
+                messages[channelName].push(message);
+                this.setState({messages: messages});
+            }, this);
         }
     },
 
