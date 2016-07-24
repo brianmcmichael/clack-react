@@ -48,16 +48,19 @@ var Channels = React.createClass({displayName: "Channels",
     render: function () {
         var that = this;
         var currentChannel = this.props.currentChannel;
-        var channelList = this.props.channels.map(function(channel, i) {
-            return (
-                React.createElement("li", {key: i, className: channel === currentChannel ? "channel active" : "channel", onClick: that.switchChannel.bind(that, channel)}, 
+
+        var channelList = [];
+        for (channel in this.props.channels) {
+            var unreadCount = this.props.channels[channel].unreadCount;
+            channelList.push(
+                React.createElement("li", {key: channel, className: channel === currentChannel ? "channel active" : "channel", onClick: that.switchChannel.bind(that, channel)}, 
                     React.createElement("a", {className: "channel_name"}, 
-                        React.createElement("span", {className: "unread"}, "0"), 
+                        React.createElement("span", {className: unreadCount == 0 ? 'hidden' : 'unread'}, " ", unreadCount, " "), 
                         React.createElement("span", null, React.createElement("span", {className: "prefix"}, "#"), channel)
                     )
                 )
-            )
-        })
+            );
+        }
 
         return (
             React.createElement("div", {className: "listings_channels"}, 
@@ -110,7 +113,7 @@ var Chat = React.createClass({displayName: "Chat",
     getInitialState: function() {
         return {
             name: null,
-            channels: [],
+            channels: {},
             messages: {},
             currentChannel: null
         };
@@ -149,23 +152,35 @@ var Chat = React.createClass({displayName: "Chat",
             // Add new channel, if it doesn't exist yet
             var messages = this.state.messages;
             messages[channelName] = [];
+            var channels = this.state.channels;
+            channels[channelName] = {unreadCount:0}
 
             this.setState({
-                channels: this.state.channels.concat(channelName),
+                channels: channels,
                 messages: messages
             });
             this.joinChannel(channelName);
             this.chatRooms[channelName] = this.pusher.subscribe(channelName);
             this.chatRooms[channelName].bind('new_message', function(message) {
                 var messages = this.state.messages;
+                var channels = this.state.channels;
+
                 messages[channelName].push(message);
-                this.setState({messages: messages});
+                if (channelName != this.state.currentChannel) {
+                    channels[channelName].unreadCount++;
+                }
+                this.setState({messages: messages, channels: channels});
             }, this);
         }
     },
 
     joinChannel: function (channelName) {
-        this.setState({ currentChannel: channelName });
+        // Reset unread count
+        var channels = this.state.channels;
+        channels[channelName].unreadCount = 0;
+
+        this.setState({ currentChannel: channelName, channels: channels });
+
     },
 
     enterName: function (event) {
