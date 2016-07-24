@@ -110,19 +110,9 @@ var Chat = React.createClass({displayName: "Chat",
     getInitialState: function() {
         return {
             name: null,
-            channels: ['general'],
-            messages: [{
-                            name: 'brianmcmichael',
-                            time: new Date(),
-                            text: 'hello brian'
-                        },
-                        {
-                            name: 'lexiapress',
-                            time: new Date(),
-                            text: 'hello b'
-                        }
-                    ],
-            currentChannel: DEFAULT_CHANNEL
+            channels: [],
+            messages: {},
+            currentChannel: null
         };
     },
     
@@ -132,7 +122,25 @@ var Chat = React.createClass({displayName: "Chat",
     },
 
     componentDidMount: function() {
-        //this.createChannel(DEFAULT_CHANNEL);
+        this.createChannel(DEFAULT_CHANNEL);
+
+        var messages = {};
+        messages[DEFAULT_CHANNEL] = [
+            {
+                name: 'brianmcmichael',
+                time: new Date(),
+                text: 'hello brian'
+            },
+            {
+                name: 'lexiapress',
+                time: new Date(),
+                text: 'hello b'
+            }
+        ]
+
+        this.setState({
+            messages: messages
+        })
     },
 
     componentDidUpdate: function() {
@@ -145,19 +153,27 @@ var Chat = React.createClass({displayName: "Chat",
             var message = {
                 name: this.state.name,
                 text: text,
+                time: new Date(),
                 channel: this.state.currentChannel
             }
 
-            $.post('/messages/', message).success(function () {
-                $('#msg-input').val('');
-            });
+            var messages = this.state.messages;
+            messages[this.state.currentChannel].push(message);
+            this.setState({ messages: messages });
+            $('#msg-input').val('');
         }
     },
 
     createChannel: function(channelName) {
         if (!(channelName in this.state.channels)) {
             // Add new channel, if it doesn't exist yet
-            this.setState({ channels: this.state.channels.concat(channelName) });
+            var messages = this.state.messages;
+            messages[channelName] = [];
+
+            this.setState({
+                channels: this.state.channels.concat(channelName),
+                messages: messages
+            });
             this.joinChannel(channelName);
         }
     },
@@ -202,7 +218,7 @@ var Chat = React.createClass({displayName: "Chat",
                         React.createElement("div", {className: "channel-menu"}, 
                             React.createElement("span", {className: "channel-menu_name"}, 
                                 React.createElement("span", {className: "channel-menu_prefix"}, "#"), 
-                                "general"
+                                this.state.currentChannel
                             )
                         )
                     ), 
@@ -216,7 +232,7 @@ var Chat = React.createClass({displayName: "Chat",
                              )
                         ), 
                         React.createElement("div", {className: "message-history"}, 
-                            React.createElement(Messages, {messages: this.state.messages})
+                            React.createElement(Messages, {messages: this.state.messages[this.state.currentChannel]})
                         )
                     ), 
                     React.createElement("div", {className: "footer"}, 
@@ -241,6 +257,8 @@ var ReactDOM = require('react-dom')
 
 var Messages = React.createClass({displayName: "Messages",
     render: function () {
+        if (!this.props.messages) {return null;}
+
         var messageList = this.props.messages.map(function(message, i) {
             var text = message.text;
             return (
