@@ -22,8 +22,9 @@ Step 3 - Install Virtualenv
 
 `$ . venv/bin/activate`
 
----
-
 `$ pip install Flask`
+
+http://flask.pocoo.org/
+
 ---
 
