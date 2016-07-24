@@ -49,9 +49,9 @@ var Chat = React.createClass({
                 channel: this.state.currentChannel
             }
 
-            $.post('/messages/', message).success(function () {
+            $.post('/messages/', message).success(function() {
                 $('#msg-input').val('');
-            })
+            });
         }
     },
 

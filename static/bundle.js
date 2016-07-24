@@ -138,9 +138,9 @@ var Chat = React.createClass({displayName: "Chat",
                 channel: this.state.currentChannel
             }
 
-            $.post('/messages/', message).success(function () {
+            $.post('/messages/', message).success(function() {
                 $('#msg-input').val('');
-            })
+            });
         }
     },
 
