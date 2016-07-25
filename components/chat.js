@@ -2,6 +2,7 @@ var React = require('react')
 var ReactDOM = require('react-dom')
 var Messages = require('./messages')
 var Channels = require('./channels')
+var Users = require('./users')
 
 var Modal = require('react-modal')
 const customStyles = {
@@ -139,6 +140,9 @@ var Chat = React.createClass({
                                 currentChannel={this.state.currentChannel}
                                 joinChannel={this.joinChannel}
                              />
+                        </div>
+                        <div className="online-users">
+                            <Users />
                         </div>
                         <div className="message-history">
                             <Messages messages={this.state.messages[this.state.currentChannel]} />
