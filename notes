@@ -1,3 +1,5 @@
+https://www.codeupstart.com/project/build-slack-with-react/
+
 ```
 sudo apt-get install npm
 sudo npm install -g browserify watchify 
