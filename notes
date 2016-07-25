@@ -36,3 +36,5 @@ Pusher
 https://pusher.com/
 
 pip install pusher
+
+https://pusher.com/docs/client_api_guide/client_presence_channels

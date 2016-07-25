@@ -161,7 +161,7 @@ var Chat = React.createClass({displayName: "Chat",
                 messages: messages
             });
             this.joinChannel(channelName);
-            this.chatRooms[channelName] = this.pusher.subscribe(channelName);
+            this.chatRooms[channelName] = this.pusher.subscribe("presence-" + channelName);
             this.chatRooms[channelName].bind('new_message', function(message) {
                 var messages = this.state.messages;
                 var channels = this.state.channels;
