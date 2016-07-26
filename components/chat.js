@@ -85,8 +85,14 @@ var Chat = React.createClass({
             }, this);
 
             // Handle 'member joined channel' events
+            this.chatRoom[channelName].bind('pusher:member_added', function(user) {
+                var users = this.state.users;
+                users[channelName] = users[channelName].concat(user.id);
+                this.setState({users: users});
+            }, this);
 
             // Handle 'member left channel' events
+            
         }
     },
 
