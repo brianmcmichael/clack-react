@@ -116,6 +116,7 @@ var Chat = React.createClass({displayName: "Chat",
             name: null,
             channels: {},
             messages: {},
+            users: {},
             currentChannel: null
         };
     },
@@ -167,6 +168,17 @@ var Chat = React.createClass({displayName: "Chat",
                 }
                 this.setState({messages: messages, channels: channels});
             }, this);
+
+            // Handle populating online users
+            this.chatRoom[channelName].bind('pusher:subscription_succeeded', function(data) {
+                var users = this.state.users;
+                users[channelName] = Object.keys(date.members);
+                this.setState({users: users});
+            }, this);
+
+            // Handle 'member joined channel' events
+
+            // Handle 'member left channel' events
         }
     },
 
