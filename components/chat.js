@@ -80,7 +80,7 @@ var Chat = React.createClass({
             // Handle populating online users
             this.chatRooms[channelName].bind('pusher:subscription_succeeded', function(data) {
                 var users = this.state.users;
-                users[channelName] = Object.keys(date.members);
+                users[channelName] = Object.keys(data.members);
                 this.setState({users: users});
             }, this);
 
@@ -170,7 +170,7 @@ var Chat = React.createClass({
                              />
                         </div>
                         <div className="online-users">
-                            <Users />
+                            <Users users={this.state.users[this.state.currentChannel]} />
                         </div>
                         <div className="message-history">
                             <Messages messages={this.state.messages[this.state.currentChannel]} />
