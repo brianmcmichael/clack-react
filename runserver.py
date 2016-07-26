@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import cgi
 import datetime
 import time
@@ -11,6 +11,7 @@ app.config['DEBUG'] = True
 app.config['PUSHER_CHAT_APP_ID'] = '228760'
 app.config['PUSHER_CHAT_APP_KEY'] = '09aa8f6c3429af4d84fe'
 app.config['PUSHER_CHAT_APP_SECRET'] = 'f731cd4252908d746509'
+app.config['SECRET_KEY'] = '=y\xe6\xa0\xf6A\xd9\xf8\xbaR\xe7\xa9\x94w\xc8\x95\xe5\x7f\x9b\xc7`(4\xb9'
 
 import pusher
 
@@ -51,7 +52,7 @@ def new_message():
 
     now = datetime.datetime.now()
     timestamp = time.mktime(now.timetuple()) * 1000
-    pusher_client.trigger(channel, 'new_message', {
+    pusher_client.trigger("presence-" + channel, 'new_message', {
         'text': text,
         'name': name,
         'time': timestamp
