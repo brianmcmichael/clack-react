@@ -121,12 +121,7 @@ var Chat = React.createClass({displayName: "Chat",
     },
     
     componentWillMount: function () {
-        this.pusher = new Pusher(PUSHER_CHAT_APP_KEY);
         this.chatRooms = {};
-    },
-
-    componentDidMount: function() {
-        this.createChannel(DEFAULT_CHANNEL);
     },
 
     componentDidUpdate: function() {
@@ -198,7 +193,10 @@ var Chat = React.createClass({displayName: "Chat",
             async: false,
         });
 
+        this.pusher = new Pusher(PUSHER_CHAT_APP_KEY, { authEndpoint: '/pusher/auth/' } );
         this.setState({name: newName});
+
+        this.createChannel(DEFAULT_CHANNEL);
     },
 
     onEnter: function (event) {
