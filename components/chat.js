@@ -78,21 +78,26 @@ var Chat = React.createClass({
             }, this);
 
             // Handle populating online users
-            this.chatRoom[channelName].bind('pusher:subscription_succeeded', function(data) {
+            this.chatRooms[channelName].bind('pusher:subscription_succeeded', function(data) {
                 var users = this.state.users;
                 users[channelName] = Object.keys(date.members);
                 this.setState({users: users});
             }, this);
 
             // Handle 'member joined channel' events
-            this.chatRoom[channelName].bind('pusher:member_added', function(user) {
+            this.chatRooms[channelName].bind('pusher:member_added', function(user) {
                 var users = this.state.users;
                 users[channelName] = users[channelName].concat(user.id);
                 this.setState({users: users});
             }, this);
 
             // Handle 'member left channel' events
-            
+            this.chatRooms[channelName].bind('pusher:member_removed', function(user) {
+                var users = this.state.users;
+                i = users[channelName].indexOf(user.id);
+                users[channelName].splice(i,1);
+                this.setState({users: users});
+            }, this);
         }
     },
 
