@@ -24,6 +24,12 @@ pusher_client = pusher.Pusher(
 def index():
     return render_template('index.html')
 
+@app.route("/setname/", methods=['POST'])
+def set_name():
+    session['name'] = request.form['name']
+
+    return "Successful"
+
 @app.route("/messages/", methods=['POST'])
 def new_message():
     name = request.form['name']
