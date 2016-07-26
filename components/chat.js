@@ -99,6 +99,13 @@ var Chat = React.createClass({
             newName = "anonymous" + randomId;
         }
 
+        $.ajax({
+            type: 'POST',
+            url: "/setname/",
+            data: {name: newName},
+            async: false,
+        });
+
         this.setState({name: newName});
     },
 
